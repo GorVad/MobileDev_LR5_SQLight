@@ -1,6 +1,5 @@
 package com.example.sqlight;
 
-import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -11,17 +10,18 @@ public class DBHelper  extends SQLiteOpenHelper{
     public static final String TABLE_CONTACTS = "contacts";
 
     public static final String KEY_ID = "_id";
-    public static final String KEY_PASS = "pass";
-    public static final String KEY_USERNAME = "username";
+    public static final String KEY_MESSAGE = "message";
+    public static final String KEY_TELEPHONE = "telephone";
 
-    public DBHelper(Context context) {
+    public DBHelper(MainActivity context)
+    {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table " + TABLE_CONTACTS + "(" + KEY_ID
-                + " integer primary key," + KEY_PASS + " text," + KEY_USERNAME + " text" + ")");
+                + " integer primary key," + KEY_MESSAGE + " text," + KEY_TELEPHONE + " text" + ")");
 
     }
 

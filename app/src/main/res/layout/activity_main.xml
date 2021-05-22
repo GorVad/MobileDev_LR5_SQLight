@@ -6,14 +6,14 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/etUsername"
+        android:id="@+id/etTelephone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="User Name"></EditText>
+        android:hint="Telephone"></EditText>
 
     <EditText
-        android:id="@+id/etPass"
-        android:hint="Pass"
+        android:id="@+id/etMessage"
+        android:hint="Message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </EditText>
@@ -34,10 +34,10 @@
             android:text="Read">
         </Button>
         <Button
-            android:id="@+id/btnClear"
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear">
+            android:text="Send">
         </Button>
     </LinearLayout>
 </LinearLayout>

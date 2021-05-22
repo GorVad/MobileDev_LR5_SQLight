@@ -1,11 +1,14 @@
 package com.example.sqlight;
 
 
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,8 +16,8 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-    Button btnAdd, btnRead, btnClear;
-    EditText etPass, etUsername;
+    Button btnAdd, btnRead, btnSend;
+    EditText etMessage, etTelephone;
 
     DBHelper dbHelper;
 
@@ -29,11 +32,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnRead = (Button) findViewById(R.id.btnRead);
         btnRead.setOnClickListener(this);
 
-        btnClear = (Button) findViewById(R.id.btnClear);
-        btnClear.setOnClickListener(this);
+        btnSend = (Button) findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(this);
 
-        etPass = (EditText) findViewById(R.id.etPass);
-        etUsername = (EditText) findViewById(R.id.etUsername);
+        etMessage = (EditText) findViewById(R.id.etMessage);
+        etTelephone = (EditText) findViewById(R.id.etTelephone);
 
         dbHelper = new DBHelper(this);
     }
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
 
-        String pass = etPass.getText().toString();
-        String username = etUsername.getText().toString();
+        String message = etMessage.getText().toString();
+        String telephone = etTelephone.getText().toString();
 
         SQLiteDatabase database = dbHelper.getWritableDatabase();
 
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
 
             case R.id.btnAdd:
-                contentValues.put(DBHelper.KEY_PASS, pass);
-                contentValues.put(DBHelper.KEY_USERNAME, username);
+                contentValues.put(DBHelper.KEY_MESSAGE, message);
+                contentValues.put(DBHelper.KEY_TELEPHONE, telephone);
 
                 database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
                 break;
@@ -63,12 +66,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 if (cursor.moveToFirst()) {
                     int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-                    int passIndex = cursor.getColumnIndex(DBHelper.KEY_PASS);
-                    int usernameIndex = cursor.getColumnIndex(DBHelper.KEY_USERNAME);
+                    int messageIndex = cursor.getColumnIndex(DBHelper.KEY_MESSAGE);
+                    int telephoneIndex = cursor.getColumnIndex(DBHelper.KEY_TELEPHONE);
                     do {
                         Log.d("mLog", "ID = " + cursor.getInt(idIndex) +
-                                ", name = " + cursor.getString(passIndex) +
-                                ", email = " + cursor.getString(usernameIndex));
+                                ", message = " + cursor.getString(messageIndex) +
+                                ", telephone = " + cursor.getString(telephoneIndex));
                     } while (cursor.moveToNext());
                 } else
                     Log.d("mLog","0 rows");
@@ -76,8 +79,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 cursor.close();
                 break;
 
-            case R.id.btnClear:
-                database.delete(DBHelper.TABLE_CONTACTS, null, null);
+            case R.id.btnSend:
+                EditText editText = (EditText) findViewById(R.id.etMessage);
+                String destinationAddress = editText.getText().toString();
+                EditText smsEditText = (EditText) findViewById(R.id.etMessage);
+                String smsMessage = smsEditText.getText().toString();
+                String scAddress = null;
+                PendingIntent sentIntent = null, deliveryIntent = null;
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage
+                        (destinationAddress, scAddress, smsMessage,
+                                sentIntent, deliveryIntent);;
                 break;
         }
         dbHelper.close();
